@@ -1,0 +1,36 @@
+.image-box {
+    height: calc(70vh - 50px);
+    height: calc(70svh - 50px);
+}
+
+.controller {
+    height: calc(30vh - 50px);
+    height: calc(30svh - 50px);
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #ca3be0;
+    border-radius: 20px;
+
+}
+
+input[type=file] {
+    display: none;
+}
+#show-image{
+    background-position: center;
+    background-size: cover;
+}
+
+@media(width > 768px) {
+
+    .image-box,
+    .controller {
+        height: calc(100vh - 90px);
+        height: calc(100svh - 90px);
+    }
+}

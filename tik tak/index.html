@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Tic Tac Toe</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            background-color: black;
+            color: white;
+
+        }
+
+        .title {
+            max-width: 260px;
+            margin: auto;
+            padding: 1rem 2rem;
+            border: 3px solid red;
+            box-shadow: 1px 1px 10px red;
+            border-radius: .5rem;
+            text-shadow: 3px 3px 5px red;
+            font-weight: bold;
+
+        }
+
+        .titTok {
+            max-width: fit-content;
+            margin: auto;
+        }
+
+
+
+        .titTok-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5px;
+
+        }
+
+        .titTok-box>* {
+            cursor: pointer;
+            box-shadow: 0 0 5px 5px blue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 5px;
+            height: 80px;
+            width: 80px;
+        }
+
+        .titTok-box>*:hover {
+            border: 1px solid yellow;
+
+        }
+
+        .btn-outline-danger,
+        .btn-outline-primary {
+            border-width: 3px;
+        }
+
+        .redText {
+            text-shadow: 3px 3px 5px red;
+
+        }
+
+        .greenText {
+            text-shadow: 3px 3px 5px #00ff00;
+
+        }
+
+        .blueText {
+            text-shadow: 3px 3px 5px blue;
+        }
+
+        .yellowText {
+            text-shadow: 3px 3px 5px yellow;
+        }
+
+        .results {
+            height: inherit;
+            width: 100%;
+            top: 0;
+        }
+
+        .win {
+            padding: 1rem 4rem;
+            border-radius: .5rem;
+            border: 3px solid #00ff00;
+            box-shadow: 0px 0px 150px 15px #00ff00;
+        }
+
+        .Lose {
+            padding: 1rem 4rem;
+            border-radius: .5rem;
+            border: 3px solid red;
+            box-shadow: 0px 0px 150px 15px red;
+        }
+
+        .over {
+            padding: 1rem 4rem;
+            border-radius: .5rem;
+            border: 3px solid yellow;
+            box-shadow: 0px 0px 150px 15px yellow;
+        }
+
+        .label {
+            max-width: 250px;
+            text-underline-offset: 5px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px red;
+            letter-spacing: 1px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="results"
+        class="position-absolute results d-flex justify-content-center align-items-center bg-black bg-opacity-75 d-none">
+        <h1 class="text-center text-capitalize bg-black "></h1>
+    </div>
+
+    <div class="row pt-4 m-auto">
+        <div class="text-center pb-4 pt-1">
+            <h3 class="mt-3 mb-2 title ">Tic Tac Toe </h3>
+            <p class="m-0 pb-2 text-start m-auto label">Select your choice:</p>
+            <button class="btn btn-outline-danger px-5 me-3 fw-bolder fs-4" id="selectBtn" data-value="X">X</button>
+            <button class="btn btn-outline-primary px-5 fw-bolder fs-4" id="selectBtn" data-value="O">O</button>
+        </div>
+        <div class="titTok">
+            <div class="titTok-box">
+                <div data-index="1">
+                    <h1></h1>
+                </div>
+                <div data-index="2">
+                    <h1></h1>
+                </div>
+                <div data-index="3">
+                    <h1></h1>
+                </div>
+                <div data-index="4">
+                    <h1></h1>
+                </div>
+                <div data-index="5">
+                    <h1></h1>
+                </div>
+                <div data-index="6">
+                    <h1></h1>
+                </div>
+                <div data-index="7">
+                    <h1></h1>
+                </div>
+                <div data-index="8">
+                    <h1></h1>
+                </div>
+                <div data-index="9">
+                    <h1></h1>
+                </div>
+            </div>
+        </div>
+        <p class="text-center pt-3"><a class="text-decoration-none text-muted text-opacity-25"
+                href="https://www.linkedin.com/in/dharmendra-kumar-a588a4119/">By Dharam</a></p>
+    </div>
+
+    <script>
+
+        let tikToxBoxes = document.querySelectorAll( ".titTok-box > *" );
+        let userClick = document.querySelectorAll( "#selectBtn" );
+        let results = document.getElementById( "results" );
+
+
+        let userChoice = "";
+        let computerChoice = "";
+        let boxNumber = [];
+        let userClickedIndex = [];
+        let computerClickedIndex = [];
+
+        userClick.forEach( element => {
+            element.addEventListener( "click", () => {
+                let value = element.dataset.value;
+                userChoice = value;
+                if ( userChoice == "X" ) {
+                    computerChoice = "O";
+                }
+                else {
+                    computerChoice = "X";
+                }
+                userClick.forEach( element => {
+                    element.classList.add( "disabled" )
+                } );
+            } )
+        } );
+
+        tikToxBoxes.forEach( element => {
+            let index = element.dataset.index;
+            boxNumber.push( index );
+
+            element.addEventListener( "click", userClickEvent )
+        } );
+
+        function userClickEvent() {
+            if ( userChoice ) {
+                let children = this.children[0];
+                if ( userChoice === "X" ) {
+                    children.classList.add( "redText" )
+                }
+                else {
+                    children.classList.add( "blueText" )
+                }
+                children.innerHTML = userChoice;
+
+                let yourChoiceIndex = this.dataset.index;
+                boxNumber = filteredNumber( boxNumber, yourChoiceIndex );
+                userClickedIndex.push( yourChoiceIndex );
+
+                this.removeEventListener( "click", userClickEvent );
+
+                if ( userClickedIndex.length >= 3 ) {
+                    let userWin = checkWinner( userClickedIndex );
+                    if ( userWin ) {
+                        console.log( "you won!" );
+                        showResult( "win", "greenText", "you won!" );
+                        return
+                    }
+                }
+                if ( boxNumber.length ) {
+                    computerPaly( boxNumber );
+                    if ( computerClickedIndex.length >= 3 ) {
+                        let computerWin = checkWinner( computerClickedIndex );
+                        if ( computerWin ) {
+                            console.log( "You Lose !" );
+                            showResult( "Lose", "redText", "you Lose!" )
+                            return
+                        }
+                    }
+                }
+                else {
+                    console.log( "Game Over!" );
+                    showResult( "over", "yellowText", "Game Over!" )
+                }
+
+
+            }
+            else {
+                alert( "Please select your choice" );
+            }
+
+        }
+        function showResult( className1, className2, text ) {
+
+            let child = results.children[0];
+            results.classList.remove( "d-none" );
+            results.classList.add( "d-block" );
+            child.classList.add( className1 );
+            child.classList.add( className2 );
+            let timer = 5;
+            child.innerHTML = text + `<br> ${timer}`;
+            let setTimer = setInterval( () => {
+                timer--;
+                child.innerHTML = text + `<br> ${timer}`;
+                if ( timer == 0 ) {
+                    clearInterval( setTimer );
+                    windowReload()
+                }
+
+            }, 1000 );
+        }
+
+        function windowReload() {
+            window.location.reload();
+
+        }
+
+        function checkWinner( arr ) {
+            let check = winLines( arr );
+            return check;
+        }
+
+
+        function computerPaly( boxArr ) {
+
+            let computerChoiceIndex = getRandomNumber( boxArr );
+            boxNumber = filteredNumber( boxArr, computerChoiceIndex );
+            computerClickedIndex.push( computerChoiceIndex );
+
+            tikToxBoxes.forEach( element => {
+                if ( computerChoiceIndex == element.dataset.index ) {
+
+                    let children = element.children[0];
+                    if ( userChoice === "O" ) {
+                        children.classList.add( "redText" )
+                    }
+                    else {
+                        children.classList.add( "blueText" )
+                    }
+                    children.innerHTML = computerChoice;
+                    element.removeEventListener( "click", userClickEvent );
+                }
+
+            } );
+        }
+
+        function getRandomNumber( arr ) {
+            let random = Math.floor( Math.random() * arr.length );
+            return arr[random];
+        }
+
+        function filteredNumber( arr, yourChoiceIndex ) {
+            let res = arr.filter( ( index ) => {
+                if ( index != yourChoiceIndex ) {
+                    return index
+                }
+            } );
+            return res;
+        }
+
+        function winLines( arr ) {
+            let SelectedIndex = arr.sort();
+
+            let winLines = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 4, 7], [1, 5, 9], [3, 5, 7]];
+
+            for ( let index = 0; index < winLines.length; index++ ) {
+                const element = winLines[index];
+                let arr1 = SelectedIndex;
+                let arr2 = element;
+
+                let m = arr1.length;
+                let n = arr2.length;
+
+                if ( isSubset( arr1, arr2, m, n ) ) {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
+        function isSubset( arr1, arr2, m, n ) {
+            let i = 0;
+            let j = 0;
+            for ( i = 0; i < n; i++ ) {
+                for ( j = 0; j < m; j++ )
+                    if ( arr2[i] == arr1[j] )
+                        break;
+                if ( j == m )
+                    return false;
+            }
+            return true;
+        }
+
+    </script>
+</body>
+
+</html>
